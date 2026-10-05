@@ -1,0 +1,57 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# Local secrets (keep example environment files)
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Downloaded model weights and exported inference models
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# YOLO configuration, generated runs, and preview runtime
+.runtime/
+Ultralytics/
+runs/
+.sites-runtime/
+/demo/.openai/
+
+# Local screenshots, research downloads, and temporary files
+/demo/proof/
+/tmp/
+*.log
+*.tmp
+*.part
+*.tar.gz
+
+# JavaScript dependencies and package-manager caches
+node_modules/
+.npm/
+.pnpm-store/
+
+# OS and editor-local files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+*.swp
+*.swo
+*~
+
+# demo/dist contains the website source; keep it in Git.
+# Keep requirements-lock.txt and test media fixtures in Git as well.

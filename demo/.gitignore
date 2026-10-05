@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+*.pt
+*.onnx
+.sites-runtime/
+.env
+*.log
+*.tar.gz
+.runtime/
+Ultralytics/
+proof/

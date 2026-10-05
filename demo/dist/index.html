@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Your laptop camera, YOLOv8 person detection, and automatic frame-rate adjustment.">
+  <title>Sentinel · Person-aware Camera</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23101827'/%3E%3Cpath d='M8 13V8h5M19 8h5v5M24 19v5h-5M13 24H8v-5' fill='none' stroke='%23b8f569' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23b8f569'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css"><script type="module" src="app.js"></script>
+</head>
+<body>
+  <header><a class="brand" href="./"><span>⌖</span> SENTINEL</a><span id="connection">Local YOLOv8 · camera off</span></header>
+  <main>
+    <div class="heading"><div><p class="eyebrow">LAPTOP CAMERA DEMO</p><h1>Person appears. FPS goes up.</h1><p class="subtitle">Step into view to speed up the stream. Step away to slow it down.</p></div><div class="actions"><button id="stop" class="secondary" disabled>Stop</button><button id="start" class="primary">Start camera</button></div></div>
+    <div id="notice" role="status">Click Start camera and allow camera access. Your camera feed stays on this computer.</div>
+    <div class="workspace">
+      <section class="camera-panel" aria-label="Person detection camera">
+        <div class="panel-top"><h2>Laptop camera</h2><span id="model-info">YOLOv8n · person only</span></div>
+        <div class="camera-stage">
+          <canvas id="camera-output" aria-label="Processed camera feed with person bounding boxes"></canvas>
+          <div id="camera-empty"><span class="camera-icon">⌖</span><strong>Your camera will appear here</strong><p>Person detection controls the frame rate automatically.</p></div>
+          <span id="person-status" class="status-badge">CAMERA OFF</span><span id="rate-badge" class="rate-badge">— FPS</span>
+        </div>
+        <div class="camera-footer"><span id="detection-detail">Waiting for camera</span><span id="camera-detail">640 px · JPEG</span></div>
+        <div class="flow"><span>Laptop camera</span><span>→</span><span>Person detection</span><span>→</span><span>Automatic FPS</span></div>
+      </section>
+      <aside>
+        <section class="settings-panel"><h2>Automatic frame rate</h2><form id="settings-form">
+          <div class="rate-setting"><span class="state-dot idle"></span><div><label for="idle-fps">Nobody detected</label><p>Low-rate checks keep watching for a person.</p></div><div class="number-input"><input id="idle-fps" type="number" min="1" max="10" value="2" required><span>FPS</span></div></div>
+          <div class="rate-setting"><span class="state-dot active"></span><div><label for="active-fps">Person detected</label><p>More frames while someone is in view.</p></div><div class="number-input"><input id="active-fps" type="number" min="2" max="30" value="15" required><span>FPS</span></div></div>
+          <label for="hold-seconds">Wait before slowing down</label><div class="unit-input"><input id="hold-seconds" type="number" min="0" max="10" step="0.1" value="1" required><span>seconds</span></div><p class="help">Avoids switching on brief missed detections.</p>
+          <button type="submit" class="secondary apply">Apply settings</button>
+        </form><p class="help hardware-note">These are target rates. Actual FPS depends on inference speed and your browser.</p></section>
+        <section class="explanation"><h2>Try it</h2><ol><li>Start the camera.</li><li>Move into view. Watch the target rise.</li><li>Leave the frame. After the hold period, the target drops.</li></ol><p>Only people trigger the higher rate. The video frame size and quality stay the same.</p></section>
+      </aside>
+    </div>
+    <section class="metrics" aria-label="Live performance">
+      <article><span>Actual FPS</span><strong id="actual-fps">— <small>fps</small></strong><p id="fps-detail">Last 3 seconds of displayed frames</p></article>
+      <article><span>End-to-end latency</span><strong id="latency">— <small>ms</small></strong><p id="latency-detail">Capture → displayed frame</p></article>
+      <article><span>Dropped frames</span><strong id="drops">—</strong><p id="drop-detail">Queue replacements + capture skips</p></article>
+      <article><span>CPU / GPU load</span><strong id="hardware">— / —</strong><p id="hardware-detail">Measured on the local gateway</p></article>
+      <article class="bandwidth-metric"><span>Bandwidth · uncompressed estimate</span><strong id="bandwidth">— <small>Mbps</small></strong><p id="bandwidth-detail"></p><p id="bandwidth-actual"></p><div class="bandwidth-inputs"><div><label for="camera-count">Number of cameras</label><input id="camera-count" type="number" min="1" max="1000" step="1" value="1" required></div><div><label for="bits-per-pixel">Bits per pixel</label><input id="bits-per-pixel" type="number" min="0.1" max="64" step="any" value="24" required></div></div><p id="bandwidth-error" role="status"></p><p>Bandwidth = cameras × width × height × FPS × bits/pixel ÷ 1,000,000 Mbps. Default: 24-bit RGB. Camera count scales the estimate; this demo runs one camera. JPEG traffic is compressed and differs from this estimate.</p></article>
+    </section>
+    <footer><span id="session-info">Camera permission is requested only when you start. Audio is never captured.</span><span>YOLOv8n · confidence ≥ 35%</span></footer>
+    <video id="capture-video" class="hidden-source" autoplay muted playsinline aria-hidden="true"></video>
+  </main>
+</body>
+</html>
