@@ -1,4 +1,4 @@
-# Báo cáo Lab: Track 4 - Day 3
+# Báo cáo Lab: Track 4 - Day 4
 **Nhóm:** Sentinel
 **Lớp:** 3A · **Phòng:** H209 · **Track:** Multi-camera bandwidth profiling
 

@@ -1,4 +1,4 @@
-# Báo cáo cá nhân Lab: Track 4 - Day 3
+# Báo cáo cá nhân Lab: Track 4 - Day 4
 **Người nộp:** Nguyễn Trọng Phúc - 2A202602552 (Project Lead & Implement Adaptive Resolution)
 **Nhóm:** Sentinel
 **Lớp:** 3A · **Phòng:** H209 · **Track:** Multi-camera bandwidth profiling
