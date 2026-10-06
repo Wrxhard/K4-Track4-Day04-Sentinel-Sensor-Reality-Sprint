@@ -133,6 +133,31 @@ def encode(frame, boxes, profile):
     start = time.perf_counter()
     width, quality = 640, 70
     frame = frame.copy()
+    
+    # ---------------------------------------------------------
+    # Tích hợp Adaptive Resolution (Nén Background, giữ nét ROI)
+    # ---------------------------------------------------------
+    h, w = frame.shape[:2]
+    bg_scale = 0.1 # Tỉ lệ nén background
+    small_bg = cv2.resize(frame, (0, 0), fx=bg_scale, fy=bg_scale)
+    compressed_bg = cv2.resize(small_bg, (w, h), interpolation=cv2.INTER_NEAREST)
+    
+    if boxes:
+        # Có vật thể -> Tạo mask giữ nét ROI, nén xung quanh
+        mask = np.zeros((h, w), dtype=np.uint8)
+        for box in boxes:
+            x1, y1, x2, y2 = map(int, box["xyxy"])
+            pad = 20 # Buffer padding
+            cv2.rectangle(mask, (max(0, x1-pad), max(0, y1-pad)), (min(w, x2+pad), min(h, y2+pad)), 255, -1)
+            
+        mask = cv2.GaussianBlur(mask, (21, 21), 0)
+        mask_3d = np.dstack([mask.astype(float) / 255.0]*3)
+        frame = (frame.astype(float) * mask_3d + compressed_bg.astype(float) * (1 - mask_3d)).astype(np.uint8)
+    else:
+        # Không có vật thể -> Nén toàn bộ
+        frame = compressed_bg
+    # ---------------------------------------------------------
+
     for box in boxes:
         x1, y1, x2, y2 = map(int, box["xyxy"])
         cv2.rectangle(frame, (x1, y1), (x2, y2), (105, 227, 91), 2)
